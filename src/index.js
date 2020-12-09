@@ -1,7 +1,6 @@
 import Game from './Game';
 import level from './level';
 let game;
-let started = false;
 function main(){
     game = new Game(level);
     game.init();
@@ -19,10 +18,8 @@ function cycle(){
 main();
 
 window.addEventListener('keydown', (e)=>{
-    if(e.key === " " && !started){
+    if(e.key === " "){
         game.ball.stop = false;
-        game.ball.ydir = 1;
-        started = true;
         return;
     }
     game.player.move(e.key);

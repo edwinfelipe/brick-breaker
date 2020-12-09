@@ -5,6 +5,23 @@ class Rect {
     this.width = width;
     this.height = height;
     this.color = color;
+    this.offset = 50;
+  }
+
+  get left() {
+    return this.col * this.width;
+  }
+
+  get right() {
+    return this.col * this.width + this.width;
+  }
+
+  get top() {
+    return this.row * this.height + this.offset;
+  }
+
+  get bottom() {
+    return this.row * this.height + this.height + this.offset;
   }
 
   get rgba() {
@@ -16,28 +33,18 @@ class Rect {
   draw(cx) {
     cx.beginPath();
     const grad = cx.createLinearGradient(
-      this.col * this.width,
-      this.row * this.height,
-      this.col * this.width + this.width,
-      this.row * this.height + this.height
+      this.left,
+      this.top,
+      this.right,
+      this.bottom
     );
     grad.addColorStop(0, this.color);
     grad.addColorStop(1, this.rgba);
     cx.fillStyle = grad;
     cx.strokeStyle = "black";
 
-    cx.fillRect(
-      this.col * this.width + 5,
-      this.row * this.height + 5,
-      this.width - 5,
-      this.height - 5
-    );
-    cx.strokeRect(
-      this.col * this.width + 5,
-      this.row * this.height + 5,
-      this.width - 5,
-      this.height - 5
-    );
+    cx.fillRect(this.left + 5, this.top + 5, this.width - 5, this.height - 5);
+    cx.strokeRect(this.left + 5, this.top + 5, this.width - 5, this.height - 5);
     cx.fill();
     cx.stroke();
     cx.closePath();

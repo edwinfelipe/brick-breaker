@@ -8,6 +8,22 @@ class Ball {
     this.ydir = -1;
   }
 
+  get left() {
+    return this.x - this.r;
+  }
+
+  get right() {
+    return this.x + this.r;
+  }
+
+  get top() {
+    return this.y - this.r;
+  }
+
+  get bottom() {
+    return this.y + this.r;
+  }
+
   draw(cx) {
     cx.beginPath();
     cx.fillStyle = "red";
@@ -33,19 +49,28 @@ class Ball {
       this.x + this.r <= player.x + player.width &&
       this.y + this.r == player.y
     ) {
-      
       this.ydir *= -1;
-      
     }
   }
 
   intersects(block) {
-    return (
-      this.x - this.r >= block.col * block.width &&
-      this.x + this.r <= block.col * block.width + block.width &&
-      this.y + this.r >= block.row * block.height &&
-      this.y - this.r <= block.row * block.height + block.height
-    );
+    const isInXRange = this.left <= block.right && this.right >= block.left;
+    const isInYRange = this.top <= block.bottom && this.bottom >= block.top;
+    if (
+      isInXRange &&
+      ((this.bottom >= block.top && this.top <= block.top) ||
+        (this.top <= block.bottom && this.bottom >= block.bottom))
+    ) {
+      return 1;
+    }
+    if (
+      isInYRange &&
+      ((this.right >= block.left && this.left <= block.right) ||
+        (this.left <= block.right && this.right >= block.left))
+    ) {
+      return 2;
+    }
+    return 0;
   }
 }
 
