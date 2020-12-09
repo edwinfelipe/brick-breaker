@@ -1,3 +1,5 @@
+import Player from "./Player";
+import Ball from "./Ball";
 import Rect from "./Rect";
 
 class Game {
@@ -6,6 +8,8 @@ class Game {
     this.cv.width = 405;
     this.cv.height = 600;
     this.cx = this.cv.getContext("2d");
+    this.player = new Player(this.cv.width / 2 - 30, this.cv.height - 20, 60);
+    this.ball = new Ball(this.cv.width / 2, this.cv.height - 27, 7);
     this.level = level;
     this.blocks = [];
     this.colors = [
@@ -22,6 +26,8 @@ class Game {
     for (let block of this.blocks) {
       block.draw(this.cx);
     }
+    this.player.draw(this.cx);
+    this.ball.draw(this.cx);
   }
 
   _generateLevel() {
@@ -46,7 +52,18 @@ class Game {
     this.cx.closePath();
   }
 
-  _actions() {}
+  _actions() {
+    this.ball.collide(this.cv.width, this.player);
+    for(let i = 0; i <this.blocks.length; i++){
+      if(this.ball.intersects(this.blocks[i])){
+        this.ball.ydir *= -1;
+        this.blocks.splice(i,1);
+        break;
+      }
+    }
+    this.ball.move();
+    this.player.follow(this.ball.x);
+  }
 
   init() {
     this._generateLevel();
