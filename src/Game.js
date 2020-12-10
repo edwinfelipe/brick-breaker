@@ -25,7 +25,6 @@ class Game {
   }
 
   _draw() {
-    
     this._clear();
     this._drawStatusBar();
     for (let block of this.blocks) {
@@ -34,12 +33,12 @@ class Game {
     this.player.draw(this.cx);
     this.ball.draw(this.cx);
   }
-  _drawStatusBar(){
+  _drawStatusBar() {
     this.cx.fillStyle = "black";
-    this.cx.fillRect(0,0,this.cv.width, 50);
+    this.cx.fillRect(0, 0, this.cv.width, 50);
     this.cx.fill();
 
-    this.cx.fillStyle = "white"
+    this.cx.fillStyle = "white";
     this.cx.font = "18pt MarkerFelt-Thin, Comic Sans MS";
 
     this.cx.fillText("Lifes: ", 10, 34);
@@ -47,9 +46,9 @@ class Game {
     this.cx.fillText(`Level: ${this.ActualLevel}`, 300, 34);
     this.cx.fill();
 
-    this.cx.fillStyle = 'red';
-    for(let i = 0; i < this.lifes; i++){
-      this.cx.arc(i * 16 + 88,28,6,0,Math.PI * 2, false);
+    this.cx.fillStyle = "red";
+    for (let i = 0; i < this.lifes; i++) {
+      this.cx.arc(i * 16 + 88, 28, 6, 0, Math.PI * 2, false);
     }
     this.cx.fill();
   }
@@ -75,31 +74,36 @@ class Game {
 
     this.cx.closePath();
   }
-  
-  _fallBall(){
+
+  _fallBall() {
     this.lifes--;
     this.player.x = this.cv.width / 2 - this.player.width / 2;
     this.ball.x = this.cv.width / 2;
-    this.ball.y = this.cv.height -28;
+    this.ball.y = this.cv.height - 28;
+    this.ball.xdir = 1;
+    this.ball.ydir = -1;
     this.ball.stop = true;
+  }
+
+  _restart() {
+    this.lifes = 3;
+    this.score = 0;
+    this._generateLevel();
   }
 
   _actions() {
     this.ball.collide(this.cv.width, this.player);
-    if(this.ball.bottom >= this.cv.height){
-      this._fallBall();
-    }
-    for(let i = 0; i <this.blocks.length; i++){
+    for (let i = 0; i < this.blocks.length; i++) {
       const intersects = this.ball.intersects(this.blocks[i]);
-      
-      if(intersects === 1){
+
+      if (intersects === 1) {
         this.ball.ydir *= -1;
-      } else if(intersects === 2){
+      } else if (intersects === 2) {
         this.ball.xdir *= -1;
       }
 
-      if(intersects){
-        this.blocks.splice(i,1);
+      if (intersects) {
+        this.blocks.splice(i, 1);
         this.score += 10;
         break;
       }
@@ -107,12 +111,20 @@ class Game {
     this.ball.move();
     // this.player.follow(this.ball.x);
   }
-
+  _eventLoop() {
+    if (this.ball.bottom >= this.cv.height) {
+      this._fallBall();
+    }
+    if (this.lifes <= 0) {
+      this._restart();
+    }
+  }
   init() {
     this._generateLevel();
   }
 
   run() {
+    this._eventLoop();
     this._actions();
     this._draw();
   }
