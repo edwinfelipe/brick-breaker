@@ -40,14 +40,14 @@ class Ball {
   }
 
   collide(width, player) {
-    if (this.x - this.r <= 0 || this.x + this.r >= width) {
+    if (this.left <= 0 || this.right >= width) {
       this.xdir *= -1;
-    } else if (this.y - this.r <= 0) {
+    } else if (this.top <= 50) {
       this.ydir *= -1;
     } else if (
-      this.x - this.r >= player.x &&
-      this.x + this.r <= player.x + player.width &&
-      this.y + this.r == player.y
+      this.left >= player.x &&
+      this.right <= player.x + player.width &&
+      (this.bottom >= player.y)
     ) {
       this.ydir *= -1;
     }
