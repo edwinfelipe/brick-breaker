@@ -1,8 +1,8 @@
 import Game from "./Game";
-import level from "./level";
+import levels from "./levels";
 let game;
 function main() {
-  game = new Game(level);
+  game = new Game(levels);
   game.init();
   console.log(game.ball, game.player);
   cycle();

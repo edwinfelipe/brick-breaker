@@ -3,18 +3,19 @@ import Ball from "./Ball";
 import Rect from "./Rect";
 
 class Game {
-  constructor(level) {
+  constructor(levels) {
     this.cv = document.getElementById("lienzo");
     this.cv.width = 405;
     this.cv.height = 600;
     this.cx = this.cv.getContext("2d");
     this.player = new Player(this.cv.width / 2 - 30, this.cv.height - 20, 60);
     this.ball = new Ball(this.cv.width / 2, this.cv.height - 28, 7);
-    this.level = level;
+    this.levels = levels;
+    this.ActualLevel = 1;
+    this.level = levels[this.ActualLevel - 1];
     this.blocks = [];
     this.score = 0;
     this.lifes = 3;
-    this.ActualLevel = 1;
     this.colors = [
       "rgb(255,0,0)",
       "rgb(0,255,255)",
@@ -90,6 +91,18 @@ class Game {
     this.score = 0;
     this._generateLevel();
   }
+  _nextLevel(){
+    this.player.x = this.cv.width / 2 - this.player.width / 2;
+    this.ball.x = this.cv.width / 2;
+    this.ball.y = this.cv.height - 28;
+    this.ball.xdir = 1;
+    this.ball.ydir = -1;
+    this.ball.stop = true;
+
+    this.ActualLevel += 1;
+    this.level = this.levels[this.ActualLevel - 1];
+    this._generateLevel();
+  }
 
   _actions() {
     this.ball.collide(this.cv.width, this.player);
@@ -109,7 +122,7 @@ class Game {
       }
     }
     this.ball.move();
-    // this.player.follow(this.ball.x);
+    this.player.follow(this.ball.x);
   }
   _eventLoop() {
     if (this.ball.bottom >= this.cv.height) {
@@ -117,6 +130,10 @@ class Game {
     }
     if (this.lifes <= 0) {
       this._restart();
+    }
+  
+    if(this.blocks.length === 0){
+      this._nextLevel();
     }
   }
   init() {
