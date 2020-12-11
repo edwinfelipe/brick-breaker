@@ -91,7 +91,7 @@ class Game {
     this.score = 0;
     this._generateLevel();
   }
-  _nextLevel(){
+  _nextLevel() {
     this.player.x = this.cv.width / 2 - this.player.width / 2;
     this.ball.x = this.cv.width / 2;
     this.ball.y = this.cv.height - 28;
@@ -99,8 +99,10 @@ class Game {
     this.ball.ydir = -1;
     this.ball.stop = true;
 
-    this.ActualLevel += 1;
-    this.level = this.levels[this.ActualLevel - 1];
+    if (this.ActualLevel < this.levels.length) {
+      this.ActualLevel += 1;
+      this.level = this.levels[this.ActualLevel - 1];
+    }
     this._generateLevel();
   }
 
@@ -131,8 +133,8 @@ class Game {
     if (this.lifes <= 0) {
       this._restart();
     }
-  
-    if(this.blocks.length === 0){
+
+    if (this.blocks.length === 0) {
       this._nextLevel();
     }
   }
