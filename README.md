@@ -15,5 +15,9 @@ Classic brick breaker game
     npx webpack
   ```
  
- ## Note
- The game can be played but is still under development, if you wish, you can make a pull request with the changes you need,add levels, design ui, etc.
+ ## Notes
+ - The game can be played but is still under development, if you wish, you can make a pull request with the changes you need,add levels, design ui, etc.
+ - The game is in autoplay mode, if you wish to play by yourself in Game.js file, comment this line.
+  ```js
+    this.player.follow(this.ball.x)
+  ```
